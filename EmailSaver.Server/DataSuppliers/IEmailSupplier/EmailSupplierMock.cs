@@ -18,6 +18,8 @@ namespace EmailSaver.Server
 				new Guid("00000000-0000-0000-0000-000000000001"),
 				new Guid("00000000-0000-0000-0000-000000000002"),
 				new Guid("00000000-0000-0000-0000-000000000003"),
+				new Guid("00000000-0000-0000-0000-000000000004"),
+				new Guid("00000000-0000-0000-0000-000000000005"),
 			};
 
 			var tags = new List<String>();
@@ -25,25 +27,22 @@ namespace EmailSaver.Server
 			_emails = new List<Email>
 			{
 				new Email(ids[0], DateTime.UtcNow, "Hogwarts", "HP", "Hello!", "You're a wizard, Harry!", tags),
-				new Email(ids[1], DateTime.UtcNow, "HP", "Hogwarts", "WAT", "Cool!", tags),
-				new Email(ids[2], DateTime.UtcNow, "Hogwarts", "AK", "Hello!", "Sorry, you are not a wizard =(", tags),
-				new Email(ids[3], DateTime.UtcNow, "AK", "Hogwarts", "RE: Hello", "Oh, okay =(", tags),
+				new Email(ids[1], DateTime.UtcNow.AddDays(1), "HP", "Hogwarts", "RE: Hello", "Cool!", tags),
+				new Email(ids[2], DateTime.UtcNow.AddDays(1), "HP", "AK", "LOL", "I'm wizard!", tags),
+				new Email(ids[3], DateTime.UtcNow.AddDays(1), "AK", "HP", "RE: LOL", "Wow! Can't wait anymore. I'll ask them right now!", tags),
+				new Email(ids[4], DateTime.UtcNow.AddDays(1), "AK", "Hogwarts", "Very Important Question", "Hello! Am I wizard too?", tags),
+				new Email(ids[5], DateTime.UtcNow.AddDays(2), "Hogwarts", "AK", "RE: Very Important Question", "Sorry, you're not.", tags)
 			};
 		}
 
 		public Task<Email> GetAsync(Guid id)
 		{
-			return Task.FromResult(_emails.SingleOrDefault(m => m.Id == id));
+			return Task.FromResult(_emails.Single(m => m.Id == id));
 		}
 
 		public Task<List<Email>> GetAllAsync()
 		{
 			return Task.FromResult(_emails);
-		}
-
-		public Task<List<Email>> GetByTagAsync(String tag)
-		{
-			throw new NotImplementedException();
 		}
 
 		public Task<List<Email>> GetBySenderAsync(String sender)
@@ -57,6 +56,11 @@ namespace EmailSaver.Server
 		}
 
 		#region NotImplemented
+
+		public Task<List<Email>> GetByTagAsync(String tag)
+		{
+			throw new NotImplementedException();
+		}
 
 		public Task<List<Email>> GetForPeriodAsync(DateTime start, DateTime end)
 		{

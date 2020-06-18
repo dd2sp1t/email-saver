@@ -7,14 +7,15 @@ namespace EmailSaver.Core
 	[Serializable]
 	public class Email
 	{
-		[JsonProperty("id")] public Guid Id { get; set; }
-		[JsonProperty("date")] public DateTime Date { get; set; }
-		[JsonProperty("sender")] public String Sender { get; set; }
-		[JsonProperty("recipient")] public String Recipient { get; set; }
-		[JsonProperty("subject")] public String Subject { get; set; }
-		[JsonProperty("text")] public String Text { get; set; }
-		[JsonProperty("tags")] public List<String> Tags { get; set; }
+		[JsonProperty("id")] public Guid Id { get;}
+		[JsonProperty("date")] public DateTime Date { get;}
+		[JsonProperty("sender")] public String Sender { get;}
+		[JsonProperty("recipient")] public String Recipient { get;}
+		[JsonProperty("subject")] public String Subject { get; }
+		[JsonProperty("text")] public String Text { get; }
+		[JsonProperty("tags")] public List<String> Tags { get; }
 
+		[JsonConstructor]
 		public Email(Guid id, DateTime date, String sender, String recipient, String subject, String text,
 			List<String> tags)
 		{
@@ -27,8 +28,14 @@ namespace EmailSaver.Core
 			Tags = tags;
 		}
 
-		public Email()
+		public override String ToString()
 		{
+			return "email:\n" +
+			       $"	id : {Id}\n" +
+			       $"	date : {Date}\n" +
+			       $"	sender : {Sender}\n" +
+			       $"	recipient : {Recipient}\n" +
+			       $"	subject : {Subject}";
 		}
 	}
 }

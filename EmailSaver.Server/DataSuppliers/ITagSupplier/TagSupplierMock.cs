@@ -13,17 +13,12 @@ namespace EmailSaver.Server
 			throw new NotImplementedException();
 		}
 
-		public Task<Boolean> AddAsync(String name)
+		public Task AddAsync(String name)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task<Boolean> RenameAsync(String oldName, String newName)
-		{
-			throw new NotImplementedException();
-		}
-
-		public Task<Boolean> DeleteAsync(String name)
+		public Task DeleteAsync(String name)
 		{
 			throw new NotImplementedException();
 		}

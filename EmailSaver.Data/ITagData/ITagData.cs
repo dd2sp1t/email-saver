@@ -2,12 +2,12 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace EmailSaver.Server
+namespace EmailSaver.Data
 {
-	public interface ITagSupplier
+	public interface ITagData
 	{
 		Task<List<String>> GetAllAsync();
-		Task AddAsync(String name);
+		Task<Guid> AddAsync(String name);
 		Task DeleteAsync(String name);
 	}
 }

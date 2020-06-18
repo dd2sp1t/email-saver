@@ -4,47 +4,24 @@ using System.Collections.Generic;
 
 namespace EmailSaver.Data
 {
-	public class TagDataAdo : ITagDataPublic, ITagDataInternal
+	public class TagDataAdo : ITagData
 	{
 		#region NotImplemented
 
-		#region ITagDataPublic
-
-		Task<List<String>> ITagDataPublic.GetAllAsync()
+		public Task<List<String>> GetAllAsync()
 		{
 			throw new NotImplementedException();
 		}
 
-		Task<Boolean> ITagDataPublic.AddAsync(String name)
+		public Task<Guid> AddAsync(String name)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task<Boolean> RenameAsync(String oldName, String newName)
+		public Task DeleteAsync(String name)
 		{
 			throw new NotImplementedException();
 		}
-
-		public Task<Boolean> DeleteAsync(String name)
-		{
-			throw new NotImplementedException();
-		}
-
-		#endregion
-
-		#region ITagDataInternal
-
-		Task<Guid> ITagDataInternal.GetIdAsync(String name)
-		{
-			throw new NotImplementedException();
-		}
-
-		Task<Guid> ITagDataInternal.AddAsync(String name)
-		{
-			throw new NotImplementedException();
-		}
-
-		#endregion
 
 		#endregion
 	}

@@ -142,23 +142,27 @@ namespace EmailSaver.Data
 		public SqlCommand CreateProcedureCommand(String procedure, SqlConnection connection,
 			params SqlParameter[] @params)
 		{
-			return CreateProcedureCommand(procedure, connection, null, @params);
+			var command = new SqlCommand(procedure, connection);
+
+			command.Parameters.AddRange(@params);
+			command.CommandType = CommandType.StoredProcedure;
+
+			return command;
 		}
 
 		/// <summary>
 		/// Creates a command as a part of transaction.
 		/// </summary>
 		/// <param name="procedure">Name of procedure to be called.</param>
-		/// <param name="connection">Current connection to database.</param>
 		/// <param name="transaction">Current transaction to attach the procedure.</param>
-		/// <param name="params">Set of parameters to the procedure</param>
-		public SqlCommand CreateProcedureCommand(String procedure, SqlConnection connection, SqlTransaction transaction,
+		/// <param name="params">Set of parameters to the procedure.</param>
+		public SqlCommand CreateProcedureCommand(String procedure, SqlTransaction transaction,
 			params SqlParameter[] @params)
 		{
-			var command = new SqlCommand(procedure, connection) {CommandType = CommandType.StoredProcedure};
-			command.Parameters.AddRange(@params);
+			var command = new SqlCommand(procedure, transaction.Connection, transaction);
 
-			if (transaction != null) command.Transaction = transaction;
+			command.Parameters.AddRange(@params);
+			command.CommandType = CommandType.StoredProcedure;
 
 			return command;
 		}

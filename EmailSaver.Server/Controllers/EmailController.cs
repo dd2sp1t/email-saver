@@ -36,12 +36,13 @@ namespace EmailSaver.Server.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetEmails()
 		{
-			_logger.LogInformation("HttpGet : GetEmails");
+			_logger.LogInformation($"{DateTime.UtcNow}: HttpGet : GetEmails : Emails requested.");
 
 			try
 			{
 				var result = await _emailSupplier.GetAllAsync();
-				_logger.LogInformation($"HttpGet : GetEmails : Returned {result.Count} items");
+
+				_logger.LogInformation($"{DateTime.UtcNow}: HttpGet : GetEmails : Returned {result.Count} items.");
 
 				return Ok(result);
 			}
@@ -111,12 +112,14 @@ namespace EmailSaver.Server.Controllers
 		[HttpPost]
 		public async Task<IActionResult> AddEmail([FromBody] Email email)
 		{
-			_logger.LogInformation("HttpPost : AddEmail");
+			_logger.LogInformation($"{DateTime.UtcNow}: HttpPost : AddEmail : Try add {email}");
 
 			try
 			{
 				Guid id = await _emailSupplier.AddAsync(email);
-				_logger.LogInformation($"HttpPost : AddEmail : New email was added : ID {id} will be returned");
+
+				_logger.LogInformation(
+					$"{DateTime.UtcNow}: HttpPost : AddEmail : New email was added : ID {id} will be returned.");
 
 				return Ok(id);
 			}
