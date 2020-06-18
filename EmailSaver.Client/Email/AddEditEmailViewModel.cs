@@ -4,11 +4,10 @@ namespace EmailSaver.Client.ViewModels
 {
 	internal class AddEditEmailViewModel : BindableBase
 	{
-		public String Text { get; set; }
+		public Guid EmailId { get; set; }
 
 		public AddEditEmailViewModel()
 		{
-			Text = "AddEditEmail";
 		}
 	}
 }
