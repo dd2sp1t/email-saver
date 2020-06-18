@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace EmailSaver.Data
 {
+	/// <summary>
+	/// Database communication contract.
+	/// </summary>
 	public interface IEmailData
 	{
 		Task<Email> GetAsync(Guid id);

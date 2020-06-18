@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using EmailSaver.Core;
 
-namespace EmailSaver.Server
+namespace EmailSaver.Core
 {
 	public interface IEmailSupplier
 	{

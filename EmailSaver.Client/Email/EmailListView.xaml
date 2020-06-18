@@ -12,69 +12,58 @@
     </UserControl.DataContext>
 
     <UserControl.Resources>
-        <Style TargetType="TextBlock" x:Key="TextStyle">
-            <Setter Property="Width" Value="Auto" />
+        <Style TargetType="{x:Type DataGridCell}" x:Key="CellStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ColumnElementStyle" TargetType="TextBlock">
             <Setter Property="Padding" Value="5" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
     </UserControl.Resources>
 
     <Grid>
 
-        <TextBlock Text="{Binding Text}" />
-
-        <!--<DataGrid ItemsSource="{Binding Emails}"
+        <DataGrid ItemsSource="{Binding Emails}"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   ColumnWidth="Auto"
-                  ScrollViewer.CanContentScroll="True" 
-                  VerticalScrollBarVisibility="Visible">
+                  ScrollViewer.CanContentScroll="True"
+                  VerticalScrollBarVisibility="Visible"
+                  >
 
             <DataGrid.Columns>
 
-                <DataGridTemplateColumn Header="ID">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Id}"
-                                       Style="{StaticResource TextStyle}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="ID"
+                                    Binding="{Binding Id}"
+                                    ElementStyle="{StaticResource ColumnElementStyle}"/>
 
-                <DataGridTemplateColumn Header="Date">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Date.Date}"
-                                       Style="{StaticResource TextStyle}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Date"
+                                    Binding="{Binding Date.Date}"
+                                    ElementStyle="{StaticResource ColumnElementStyle}"/>
 
-                <DataGridTemplateColumn Header="Sender">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Sender}"
-                                       Style="{StaticResource TextStyle}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Sender"
+                                    Binding="{Binding Sender}"
+                                    ElementStyle="{StaticResource ColumnElementStyle}"/>
 
-                <DataGridTemplateColumn Header="Recipient">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Recipient}"
-                                       Style="{StaticResource TextStyle}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Recipient"
+                                    Binding="{Binding Recipient}"
+                                    ElementStyle="{StaticResource ColumnElementStyle}"/>
 
-                <DataGridTemplateColumn Header="Subject">
+                <DataGridTextColumn Header="Subject"
+                                    Binding="{Binding Subject}"
+                                    ElementStyle="{StaticResource ColumnElementStyle}"/>
+
+                <DataGridTemplateColumn Width="*">
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Subject}"
-                                       Style="{StaticResource TextStyle}" />
-                        </DataTemplate>
+                        <DataTemplate />
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
@@ -84,18 +73,14 @@
                             <Button
                                 Content="Open"
                                 Padding="5"
-                                Command="{Binding DataContext.OpenEmailCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                                Command="{Binding DataContext.OpenEmailCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                CommandParameter="{Binding}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Width="*">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate />
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
             </DataGrid.Columns>
-        </DataGrid>-->
+        </DataGrid>
 
     </Grid>
 </UserControl>

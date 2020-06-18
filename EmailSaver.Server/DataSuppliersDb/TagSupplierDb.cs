@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using EmailSaver.Core;
 using EmailSaver.Data;
 
 namespace EmailSaver.Server
 {
-	internal class TagSupplier : ITagSupplier
+	internal class TagSupplierDb : ITagSupplier
 	{
 		private readonly ITagData _tagData;
 
-		public TagSupplier()
+		public TagSupplierDb()
 		{
 			_tagData = new TagDataAdo();
 		}

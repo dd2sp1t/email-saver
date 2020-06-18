@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace EmailSaver.Server
+namespace EmailSaver.Core
 {
 	public interface ITagSupplier
 	{

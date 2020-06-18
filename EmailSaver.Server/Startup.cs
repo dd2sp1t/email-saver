@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using EmailSaver.Core;
 
 namespace EmailSaver.Server
 {
@@ -20,7 +21,7 @@ namespace EmailSaver.Server
 		{
 			services.AddControllers().AddNewtonsoftJson();
 
-			services.AddSingleton<IEmailSupplier, EmailSupplier>();
+			services.AddSingleton<IEmailSupplier, EmailSupplierDb>();
 			services.AddSingleton<ITagSupplier, TagSupplierMock>();
 		}
 

@@ -5,7 +5,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace EmailSaver.Client.Logic
+namespace EmailSaver.Client
 {
 	internal class HttpHelper
 	{

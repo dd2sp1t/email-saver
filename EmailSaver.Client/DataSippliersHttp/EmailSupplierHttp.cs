@@ -3,21 +3,28 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using EmailSaver.Core;
 
-namespace EmailSaver.Client.Logic
+namespace EmailSaver.Client
 {
-	internal class EmailSupplierMock : IEmailSupplier
+	internal class EmailSupplierHttp : IEmailSupplier
 	{
-		#region NotImplemented
-		
+		private readonly HttpHelper _helper = HttpHelper.Instance;
+
 		public Task<Email> GetAsync(Guid id)
 		{
-			throw new NotImplementedException();
+			return _helper.GetAsync<Email>($"/api/emails/id?value={id}");
 		}
 
 		public Task<List<Email>> GetAllAsync()
 		{
-			throw new NotImplementedException();
+			return _helper.GetAsync<List<Email>>("/api/emails");
 		}
+
+		public Task<Guid> AddAsync(Email email)
+		{
+			return _helper.PostAsync(email, "/api/emails");
+		}
+
+		#region NotImplemented
 
 		public Task<List<Email>> GetByTagAsync(String tag)
 		{
@@ -35,11 +42,6 @@ namespace EmailSaver.Client.Logic
 		}
 
 		public Task<List<Email>> GetForPeriodAsync(DateTime start, DateTime end)
-		{
-			throw new NotImplementedException();
-		}
-
-		public Task<Guid> AddAsync(Email email)
 		{
 			throw new NotImplementedException();
 		}

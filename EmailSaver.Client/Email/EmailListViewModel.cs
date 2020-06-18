@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.ObjectModel;
-using EmailSaver.Client.Logic;
 using EmailSaver.Core;
 
 namespace EmailSaver.Client.ViewModels
@@ -9,9 +9,6 @@ namespace EmailSaver.Client.ViewModels
 	{
 		private readonly IEmailSupplier _emailSupplier;
 
-
-		public String Text { get; set; }
-
 		public ObservableCollection<EmailObservable> Emails { get; }
 		public EmailObservable SelectedEmail { get; set; }
 		
@@ -19,11 +16,13 @@ namespace EmailSaver.Client.ViewModels
 
 		public EmailListViewModel()
 		{
-			_emailSupplier = new EmailSupplierHttp();
+			//_emailSupplier = new EmailSupplierHttp();
+			_emailSupplier = new EmailSupplierMock();
 
-			Text = "EmailList";
+			var emails = _emailSupplier.GetAllAsync().Result.Select(e => new EmailObservable(e));
 
-			Emails = new ObservableCollection<EmailObservable>();
+			Emails = new ObservableCollection<EmailObservable>(emails);
+			
 			OpenEmailCommand = new RelayCommand(OpenEmail);
 		}
 

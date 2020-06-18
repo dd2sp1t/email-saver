@@ -3,15 +3,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using EmailSaver.Core;
 using EmailSaver.Data;
+
 
 namespace EmailSaver.Server
 {
-	internal class EmailSupplier : IEmailSupplier
+	internal class EmailSupplierDb : IEmailSupplier
 	{
 		private readonly IEmailData _emailData;
 
-		public EmailSupplier()
+		public EmailSupplierDb()
 		{
 			_emailData = new EmailDataAdo();
 		}
@@ -67,7 +69,7 @@ namespace EmailSaver.Server
 			return await _emailData.DeleteAsync(id);
 		}
 
-		private static Core.Email ConvertToCoreEmail(Email dto)
+		private static Core.Email ConvertToCoreEmail(Data.Email dto)
 		{
 			var tags = JsonConvert.DeserializeObject<List<String>>(dto.Tags);
 			return new Core.Email(dto.Id, dto.Date, dto.Sender, dto.Recipient, dto.Subject, dto.Text, tags);

@@ -2,11 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using EmailSaver.Core;
 
-namespace EmailSaver.Server
+namespace EmailSaver.Core
 {
-	internal class EmailSupplierMock : IEmailSupplier
+	public class EmailSupplierMock : IEmailSupplier
 	{
 		private readonly List<Email> _emails;
 

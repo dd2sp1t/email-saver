@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace EmailSaver.Server
+namespace EmailSaver.Core
 {
-	internal class TagSupplierMock : ITagSupplier
+	public class TagSupplierMock : ITagSupplier
 	{
 		#region NotImplemented
 
