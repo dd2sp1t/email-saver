@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using EmailSaver.Core;
 
 namespace EmailSaver.Client
 {
 	internal class EmailObservable : BindableBase
 	{
-		public Guid Id { get; set; }
+		public Guid Id { get; }
 		public DateTime Date { get; set; }
 		public String Sender { get; set; }
 		public String Recipient { get; set; }
 		public String Subject { get; set; }
 		public String Text { get; set; }
-		public List<String> Tags { get; set; }
+		public ObservableCollection<String> Tags { get; }
 
 		public EmailObservable(Guid id, DateTime date, String sender, String recipient, String subject, String text,
 			List<String> tags)
@@ -23,7 +24,7 @@ namespace EmailSaver.Client
 			Recipient = recipient;
 			Subject = subject;
 			Text = text;
-			Tags = tags;
+			Tags = new ObservableCollection<String>(tags);
 		}
 
 		public EmailObservable(Email email)

@@ -9,10 +9,44 @@
         Title="Email Saver" Height="450" Width="800">
 
     <Window.DataContext>
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowViewModel />
     </Window.DataContext>
-    
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:EmailListViewModel}">
+            <v:EmailListView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:AddEditEmailViewModel}">
+            <v:AddEditEmailView />
+        </DataTemplate>
+    </Window.Resources>
+
     <Grid>
-        <v:EmailListView/>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Name="NavigationBar" Grid.Row="0" Orientation="Horizontal">
+
+            <Button
+                Content="Get All Emails"
+                Padding="5"
+                Command="{Binding NavigationCommand}"
+                CommandParameter="emails" />
+
+            <Button
+                Content="Add Email"
+                Padding="5"
+                Command="{Binding NavigationCommand}"
+                CommandParameter="add-edit" />
+
+        </StackPanel>
+
+        <Grid Name="Content" Grid.Row="1">
+            <ContentControl Content="{Binding CurrentViewModel}" />
+        </Grid>
+
     </Grid>
 </Window>

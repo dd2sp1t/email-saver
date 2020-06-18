@@ -21,26 +21,10 @@
     </UserControl.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
+        <TextBlock Text="{Binding Text}" />
 
-            <Button
-                Content="Get All Emails"
-                Padding="5"
-                Command="{Binding GetAllEmailsCommand}" />
-
-            <Button
-                Content="Add Email"
-                Padding="5"
-                Command="{Binding AddEmailCommand}" />
-
-        </StackPanel>
-
-        <DataGrid Grid.Row="2" ItemsSource="{Binding Emails}"
+        <!--<DataGrid ItemsSource="{Binding Emails}"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   ColumnWidth="Auto"
@@ -111,7 +95,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
-        </DataGrid>
+        </DataGrid>-->
 
     </Grid>
 </UserControl>

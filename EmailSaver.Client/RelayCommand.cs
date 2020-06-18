@@ -23,6 +23,6 @@ namespace EmailSaver.Client
 			_execute(parameter);
 		}
 
-		public event EventHandler CanExecuteChanged;
+		public event EventHandler CanExecuteChanged = delegate { };
 	}
 }

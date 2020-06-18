@@ -4,9 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:v="clr-namespace:EmailSaver.Client.Views"
+             xmlns:vm="clr-namespace:EmailSaver.Client.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.DataContext>
+        <vm:AddEditEmailViewModel/>
+    </UserControl.DataContext>
+    
     <Grid>
-            
+        <TextBlock Text="{Binding Text}" />
     </Grid>
 </UserControl>
