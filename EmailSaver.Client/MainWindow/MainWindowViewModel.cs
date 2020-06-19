@@ -1,4 +1,5 @@
 ﻿using System;
+using Unity;
 
 namespace EmailSaver.Client.ViewModels
 {
@@ -13,8 +14,8 @@ namespace EmailSaver.Client.ViewModels
 
 		public MainWindowViewModel()
 		{
-			EmailListViewModel = new EmailListViewModel();
-			AddEditEmailViewModel = new AddEditEmailViewModel();
+			EmailListViewModel = ContainerHelper.Container.Resolve<EmailListViewModel>();
+			AddEditEmailViewModel = ContainerHelper.Container.Resolve<AddEditEmailViewModel>();
 
 			NavigationCommand = new RelayCommand(Navigate);
 

@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using EmailSaver.Core;
 using Validar;
@@ -12,30 +11,31 @@ namespace EmailSaver.Client.ViewModels
 	[InjectValidation]
 	internal class AddEditEmailViewModel : BindableBase
 	{
-		private readonly IEmailSupplier _emailSupplier = EmailSupplierMock.Instance;
+		private readonly StringBuilder _builder;
+		private readonly IEmailSupplier _emailSupplier;
 		private readonly ValidationTemplate _validation;
 
 		public Guid Id { get; private set; }
 		[Required] public DateTime Date { get; set; }
-		[Required] public String Sender { get; set; }
-		[Required] public String Recipient { get; set; }
-		[Required] public String Subject { get; set; }
-		[Required] public String Text { get; set; }
-		public ObservableCollection<String> Tags { get; }
+		[Required] [MaxLength(100)] public String Sender { get; set; }
+		[Required] [MaxLength(100)] public String Recipient { get; set; }
+		[Required] [MaxLength(100)] public String Subject { get; set; }
+		[Required] [MaxLength(2000)] public String Text { get; set; }
+		[MaxLength(2000)] public String Tags { get; set; }
 
 		public RelayCommand SubmitCommand { get; }
 		public Boolean IsSubmitEnabled { get; private set; }
 
-		public event Action EmailSubmited; 
+		public event Action EmailSubmited;
 
-		public AddEditEmailViewModel()
+		public AddEditEmailViewModel(IEmailSupplier emailSupplier)
 		{
-			Tags = new ObservableCollection<String>();
-			SubmitCommand = new RelayCommand(Submit);
-
+			_builder = new StringBuilder();
+			_emailSupplier = emailSupplier;
 			_validation = new ValidationTemplate(this);
-
 			_validation.ErrorsChanged += (sender, args) => IsSubmitEnabled = !_validation.HasErrors;
+
+			SubmitCommand = new RelayCommand(Submit);
 		}
 
 		public async Task FillEmailData(Guid id)
@@ -53,7 +53,11 @@ namespace EmailSaver.Client.ViewModels
 			Subject = email.Subject;
 			Text = email.Text;
 
-			foreach (String tag in email.Tags) Tags.Add(tag);
+			foreach (String tag in email.Tags) _builder.Append(tag + " ");
+
+			Tags = _builder.ToString();
+
+			_builder.Clear();
 		}
 
 		private void Clear()
@@ -64,21 +68,18 @@ namespace EmailSaver.Client.ViewModels
 			Recipient = default;
 			Subject = default;
 			Text = default;
-			Tags.Clear();
+			Tags = default;
 		}
 
 		private async void Submit(Object obj)
 		{
-			var email = new Email(Id, Date, Sender, Recipient, Subject, Text, Tags.ToList());
+			var email = new Email(Id, Date, Sender, Recipient, Subject, Text,
+				Tags.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList());
 
 			if (Id == Guid.Empty)
-			{
 				Id = await _emailSupplier.AddAsync(email);
-			}
 			else
-			{
 				await _emailSupplier.UpdateAsync(email);
-			}
 
 			EmailSubmited?.Invoke();
 		}

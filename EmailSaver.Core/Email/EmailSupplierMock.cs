@@ -7,32 +7,10 @@ namespace EmailSaver.Core
 {
 	public class EmailSupplierMock : IEmailSupplier
 	{
-		#region SingleTon
-
-		private static readonly Object _sync = new Object();
-		private static volatile EmailSupplierMock _instance;
-
-		public static EmailSupplierMock Instance { 
-			
-			get
-			{
-				if (_instance != null) return _instance;
-
-				lock (_sync)
-				{
-					if (_instance == null) _instance = new EmailSupplierMock();
-				}
-
-				return _instance;
-			}
-		}
-
-		#endregion
-
 		private readonly List<Email> _emails;
 		private readonly Random _random;
 
-		private EmailSupplierMock()
+		public EmailSupplierMock()
 		{
 			var ids = new List<Guid>()
 			{
@@ -44,16 +22,24 @@ namespace EmailSaver.Core
 				new Guid("b8167db3-c458-4cb4-8423-c8d76b64d070"),
 			};
 
-			var tags = new List<String>();
+			var tags = new List<String> {"inbox"};
 
 			_emails = new List<Email>
 			{
 				new Email(ids[0], DateTime.UtcNow, "Hogwarts", "HP", "Hello!", "You're a wizard, Harry!", tags),
+
 				new Email(ids[1], DateTime.UtcNow.AddDays(1), "HP", "Hogwarts", "RE: Hello", "Cool!", tags),
+
 				new Email(ids[2], DateTime.UtcNow.AddDays(1), "HP", "AK", "LOL", "I'm wizard!", tags),
-				new Email(ids[3], DateTime.UtcNow.AddDays(1), "AK", "HP", "RE: LOL", "Wow! Can't wait anymore. I'll ask them right now!", tags),
-				new Email(ids[4], DateTime.UtcNow.AddDays(1), "AK", "Hogwarts", "Very Important Question", "Hello! Am I wizard too?", tags),
-				new Email(ids[5], DateTime.UtcNow.AddDays(2), "Hogwarts", "AK", "RE: Very Important Question", "Sorry, you're not.", tags)
+
+				new Email(ids[3], DateTime.UtcNow.AddDays(1),
+					"AK", "HP", "RE: LOL", "Wow! Can't wait anymore. I'll ask them right now!", tags),
+
+				new Email(ids[4], DateTime.UtcNow.AddDays(1),
+					"AK", "Hogwarts", "Very Important Question", "Hello! Am I wizard too?", tags),
+
+				new Email(ids[5], DateTime.UtcNow.AddDays(2),
+					"Hogwarts", "AK", "RE: Very Important Question", "Sorry, you're not.", tags)
 			};
 
 			_random = new Random();
@@ -85,7 +71,8 @@ namespace EmailSaver.Core
 			_random.NextBytes(bytes);
 
 			var id = new Guid(bytes);
-			_emails.Add(new Email(id, email.Date, email.Sender, email.Recipient, email.Subject, email.Text, email.Tags));
+			_emails.Add(new Email(id, email.Date, email.Sender, email.Recipient, email.Subject, email.Text,
+				email.Tags));
 
 			return Task.FromResult(id);
 		}

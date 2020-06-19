@@ -7,21 +7,19 @@ namespace EmailSaver.Client
 {
 	internal class EmailSupplierHttp : IEmailSupplier
 	{
-		private readonly HttpHelper _helper = HttpHelper.Instance;
-
 		public Task<Email> GetAsync(Guid id)
 		{
-			return _helper.GetAsync<Email>($"/api/emails/id?value={id}");
+			return HttpHelper.GetAsync<Email>($"/api/emails/id?value={id}");
 		}
 
 		public Task<List<Email>> GetAllAsync()
 		{
-			return _helper.GetAsync<List<Email>>("/api/emails");
+			return HttpHelper.GetAsync<List<Email>>("/api/emails");
 		}
 
 		public Task<Guid> AddAsync(Email email)
 		{
-			return _helper.PostAsync(email, "/api/emails");
+			return HttpHelper.PostAsync(email, "/api/emails");
 		}
 
 		#region NotImplemented

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Collections.ObjectModel;
 using EmailSaver.Core;
@@ -8,7 +7,7 @@ namespace EmailSaver.Client.ViewModels
 {
 	internal class EmailListViewModel : BindableBase
 	{
-		private readonly IEmailSupplier _emailSupplier = EmailSupplierMock.Instance;
+		private readonly IEmailSupplier _emailSupplier;
 
 		public ObservableCollection<EmailObservable> Emails { get; }
 		public EmailObservable SelectedEmail { get; set; }
@@ -17,10 +16,9 @@ namespace EmailSaver.Client.ViewModels
 
 		public RelayCommand OpenEmailCommand { get; }
 
-		public EmailListViewModel()
+		public EmailListViewModel(IEmailSupplier emailSupplier)
 		{
-			//_emailSupplier = new EmailSupplierHttp();
-			OpenEmailClicked += emailId => { };
+			_emailSupplier = emailSupplier;
 
 			var emails = _emailSupplier.GetAllAsync().Result.Select(e => new EmailObservable(e));
 

@@ -10,54 +10,53 @@ namespace EmailSaver.Data
 	public class EmailDataAdo : IEmailData
 	{
 		private readonly EmailMapper _mapper = new EmailMapper();
-		private readonly AdoHelper _helper = AdoHelper.Instance;
 
 		public async Task<Email> GetAsync(Guid id)
 		{
 			var @params = new SqlParameter[] {new SqlParameter("@id", id)};
-			await using var connection = new SqlConnection(_helper.ConnectionString);
-			await using SqlCommand command = _helper.CreateProcedureCommand("sp_get_email", connection, @params);
+			await using var connection = new SqlConnection(AdoHelper.ConnectionString);
+			await using SqlCommand command = AdoHelper.CreateProcedureCommand("sp_get_email", connection, @params);
 
-			return await _helper.GetItemAsync(command, _mapper);
+			return await AdoHelper.GetItemAsync(command, _mapper);
 		}
 
 		public async Task<List<Email>> GetAllAsync()
 		{
 			var @params = new SqlParameter[0];
-			await using var connection = new SqlConnection(_helper.ConnectionString);
-			await using SqlCommand command = _helper.CreateProcedureCommand("sp_get_emails", connection, @params);
+			await using var connection = new SqlConnection(AdoHelper.ConnectionString);
+			await using SqlCommand command = AdoHelper.CreateProcedureCommand("sp_get_emails", connection, @params);
 
-			return await _helper.GetItemsAsync(command, _mapper);
+			return await AdoHelper.GetItemsAsync(command, _mapper);
 		}
 
 		public async Task<List<Email>> GetByTagAsync(String tag)
 		{
 			var @params = new SqlParameter[] {new SqlParameter("@tag", tag)};
-			await using var connection = new SqlConnection(_helper.ConnectionString);
+			await using var connection = new SqlConnection(AdoHelper.ConnectionString);
 			await using SqlCommand command =
-				_helper.CreateProcedureCommand("sp_get_emails_by_tag", connection, @params);
+				AdoHelper.CreateProcedureCommand("sp_get_emails_by_tag", connection, @params);
 
-			return await _helper.GetItemsAsync(command, _mapper);
+			return await AdoHelper.GetItemsAsync(command, _mapper);
 		}
 
 		public async Task<List<Email>> GetBySenderAsync(String sender)
 		{
 			var @params = new SqlParameter[] {new SqlParameter("@sender", sender)};
-			await using var connection = new SqlConnection(_helper.ConnectionString);
+			await using var connection = new SqlConnection(AdoHelper.ConnectionString);
 			await using SqlCommand command =
-				_helper.CreateProcedureCommand("sp_get_emails_by_sender", connection, @params);
+				AdoHelper.CreateProcedureCommand("sp_get_emails_by_sender", connection, @params);
 
-			return await _helper.GetItemsAsync(command, _mapper);
+			return await AdoHelper.GetItemsAsync(command, _mapper);
 		}
 
 		public async Task<List<Email>> GetByRecipientAsync(String recipient)
 		{
 			var @params = new SqlParameter[] {new SqlParameter("@recipient", recipient)};
-			await using var connection = new SqlConnection(_helper.ConnectionString);
+			await using var connection = new SqlConnection(AdoHelper.ConnectionString);
 			await using SqlCommand command =
-				_helper.CreateProcedureCommand("sp_get_emails_by_recipient", connection, @params);
+				AdoHelper.CreateProcedureCommand("sp_get_emails_by_recipient", connection, @params);
 
-			return await _helper.GetItemsAsync(command, _mapper);
+			return await AdoHelper.GetItemsAsync(command, _mapper);
 		}
 
 		public async Task<List<Email>> GetForPeriodAsync(DateTime start, DateTime end)
@@ -70,16 +69,16 @@ namespace EmailSaver.Data
 				new SqlParameter("@end_date", end.ToString("yyyy-MM-dd HH:mm:ss"))
 			};
 
-			await using var connection = new SqlConnection(_helper.ConnectionString);
+			await using var connection = new SqlConnection(AdoHelper.ConnectionString);
 			await using SqlCommand command =
-				_helper.CreateProcedureCommand("sp_get_emails_for_period", connection, @params);
+				AdoHelper.CreateProcedureCommand("sp_get_emails_for_period", connection, @params);
 
-			return await _helper.GetItemsAsync(command, _mapper);
+			return await AdoHelper.GetItemsAsync(command, _mapper);
 		}
 
 		public async Task<Guid> AddAsync(Email email, List<String> tags)
 		{
-			await using var connection = new SqlConnection(_helper.ConnectionString);
+			await using var connection = new SqlConnection(AdoHelper.ConnectionString);
 
 			await connection.OpenAsync();
 
@@ -114,10 +113,10 @@ namespace EmailSaver.Data
 		public async Task DeleteAsync(Guid id)
 		{
 			var @params = new SqlParameter[] {new SqlParameter("@id", id)};
-			await using var connection = new SqlConnection(_helper.ConnectionString);
-			await using SqlCommand command = _helper.CreateProcedureCommand("sp_delete_email", connection, @params);
+			await using var connection = new SqlConnection(AdoHelper.ConnectionString);
+			await using SqlCommand command = AdoHelper.CreateProcedureCommand("sp_delete_email", connection, @params);
 
-			await _helper.ExecuteAsync(command);
+			await AdoHelper.ExecuteAsync(command);
 		}
 
 		/// <summary>
@@ -125,7 +124,7 @@ namespace EmailSaver.Data
 		/// </summary>
 		/// <param name="tags">Tag names collection.</param>
 		/// <param name="transaction">Transaction to attach possible insert action.</param>
-		private async Task<List<Tag>> GetValidTags(IEnumerable<String> tags, SqlTransaction transaction)
+		private static async Task<List<Tag>> GetValidTags(IEnumerable<String> tags, SqlTransaction transaction)
 		{
 			if (tags == null) return new List<Tag>();
 
@@ -143,13 +142,13 @@ namespace EmailSaver.Data
 		/// </summary>
 		/// <param name="name">Tag name.</param>
 		/// <param name="transaction">Transaction to attach possible insert action.</param>
-		private async Task<Guid> GetTagId(String name, SqlTransaction transaction)
+		private static async Task<Guid> GetTagId(String name, SqlTransaction transaction)
 		{
 			var procedure = "sp_get_tag_id_or_add";
 			var param = new SqlParameter("@name", name.ToLower());
-			await using SqlCommand command = _helper.CreateProcedureCommand(procedure, transaction, param);
+			await using SqlCommand command = AdoHelper.CreateProcedureCommand(procedure, transaction, param);
 
-			return await _helper.AddItemAsync(command);
+			return await AdoHelper.AddItemAsync(command);
 		}
 
 		/// <summary>
@@ -158,7 +157,7 @@ namespace EmailSaver.Data
 		/// <param name="email">Email data transfer object.</param>
 		/// <param name="tags">Serialized string list of valid tag names.</param>
 		/// <param name="transaction">Transaction to attach insert action.</param>
-		private async Task<Guid> AddEmail(Email email, String tags, SqlTransaction transaction)
+		private static async Task<Guid> AddEmail(Email email, String tags, SqlTransaction transaction)
 		{
 			var procedure = "sp_add_email";
 			var @params = new SqlParameter[]
@@ -171,28 +170,28 @@ namespace EmailSaver.Data
 				new SqlParameter("@tags", tags)
 			};
 
-			await using SqlCommand command = _helper.CreateProcedureCommand(procedure, transaction, @params);
+			await using SqlCommand command = AdoHelper.CreateProcedureCommand(procedure, transaction, @params);
 
-			return await _helper.AddItemAsync(command);
+			return await AdoHelper.AddItemAsync(command);
 		}
 
 		/// <summary>
 		/// Adds email-tag relation for each email tag as a part of transaction.
 		/// </summary>
-		private Task AddEmailTags(Guid emailId, IEnumerable<Tag> tags, SqlTransaction transaction)
+		private static Task AddEmailTags(Guid emailId, IEnumerable<Tag> tags, SqlTransaction transaction)
 		{
 			return Task.WhenAll(tags.Select(t => AddEmailTag(emailId, t.Id, transaction)));
 		}
 
-		private async Task<Guid> AddEmailTag(Guid emailId, Guid tagId, SqlTransaction transaction)
+		private static async Task<Guid> AddEmailTag(Guid emailId, Guid tagId, SqlTransaction transaction)
 		{
 			var procedure = "sp_add_email_tag";
 			var @params = new SqlParameter[]
 				{new SqlParameter("@email_id", emailId), new SqlParameter("@tag_id", tagId)};
 
-			await using SqlCommand command = _helper.CreateProcedureCommand(procedure, transaction, @params);
+			await using SqlCommand command = AdoHelper.CreateProcedureCommand(procedure, transaction, @params);
 
-			return await _helper.AddItemAsync(command);
+			return await AdoHelper.AddItemAsync(command);
 		}
 	}
 }
