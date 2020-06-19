@@ -106,18 +106,18 @@ namespace EmailSaver.Data
 			}
 		}
 
-		public Task<Boolean> UpdateAsync(Email email, List<String> tags)
+		public Task UpdateAsync(Email email, List<String> tags)
 		{
 			throw new NotImplementedException();
 		}
 
-		public async Task<Boolean> DeleteAsync(Guid id)
+		public async Task DeleteAsync(Guid id)
 		{
 			var @params = new SqlParameter[] {new SqlParameter("@id", id)};
 			await using var connection = new SqlConnection(_helper.ConnectionString);
 			await using SqlCommand command = _helper.CreateProcedureCommand("sp_delete_email", connection, @params);
 
-			return await _helper.ExecuteAsync(command);
+			await _helper.ExecuteAsync(command);
 		}
 
 		/// <summary>

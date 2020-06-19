@@ -24,13 +24,13 @@ namespace EmailSaver.Client.ViewModels
 			EmailListViewModel.OpenEmailClicked += OnOpenEmailClicked;
 		}
 
-		private void OnOpenEmailClicked(Guid obj)
+		private async void OnOpenEmailClicked(Guid id)
 		{
-			AddEditEmailViewModel.EmailId = obj;
+			await AddEditEmailViewModel.FillEmailData(id);
 			CurrentViewModel = AddEditEmailViewModel;
 		}
 
-		private void Navigate(Object parameter)
+		private async void Navigate(Object parameter)
 		{
 			if (!(parameter is String target)) throw new ArgumentException();
 
@@ -43,14 +43,15 @@ namespace EmailSaver.Client.ViewModels
 				}
 					break;
 				case "add-edit":
+				{
+					await AddEditEmailViewModel.FillEmailData(Guid.Empty);
 					CurrentViewModel = AddEditEmailViewModel;
+				}
 					break;
 				default:
 					CurrentViewModel = CurrentViewModel;
 					break;
 			}
-
-			AddEditEmailViewModel.EmailId = Guid.Empty;
 		}
 	}
 }

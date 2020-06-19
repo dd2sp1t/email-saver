@@ -48,25 +48,25 @@ namespace EmailSaver.Server
 			return (await _emailData.GetForPeriodAsync(start_date, end_date)).Select(ConvertToCoreEmail).ToList();
 		}
 
-		public async Task<Guid> AddAsync(Core.Email email)
+		public Task<Guid> AddAsync(Core.Email email)
 		{
 			var dto = new Data.Email(Guid.Empty, email.Date, email.Sender.ToLower(), email.Recipient.ToLower(),
 				email.Subject, email.Text, null);
 
-			return await _emailData.AddAsync(dto, email.Tags);
+			return _emailData.AddAsync(dto, email.Tags);
 		}
 
-		public async Task<Boolean> UpdateAsync(Core.Email email)
+		public Task UpdateAsync(Core.Email email)
 		{
 			var dto = new Data.Email(email.Id, email.Date, email.Sender.ToLower(), email.Recipient.ToLower(),
 				email.Subject, email.Text, null);
 
-			return await _emailData.UpdateAsync(dto, email.Tags);
+			return _emailData.UpdateAsync(dto, email.Tags);
 		}
 
-		public async Task<Boolean> DeleteAsync(Guid id)
+		public Task DeleteAsync(Guid id)
 		{
-			return await _emailData.DeleteAsync(id);
+			return _emailData.DeleteAsync(id);
 		}
 
 		private static Core.Email ConvertToCoreEmail(Data.Email dto)

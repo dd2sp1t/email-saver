@@ -46,12 +46,12 @@ namespace EmailSaver.Client
 			throw new NotImplementedException();
 		}
 
-		public Task<Boolean> UpdateAsync(Email email)
+		public Task UpdateAsync(Email email)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task<Boolean> DeleteAsync(Guid id)
+		public Task DeleteAsync(Guid id)
 		{
 			throw new NotImplementedException();
 		}

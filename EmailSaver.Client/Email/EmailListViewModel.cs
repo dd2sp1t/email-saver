@@ -8,7 +8,7 @@ namespace EmailSaver.Client.ViewModels
 {
 	internal class EmailListViewModel : BindableBase
 	{
-		private readonly IEmailSupplier _emailSupplier;
+		private readonly IEmailSupplier _emailSupplier = EmailSupplierMock.Instance;
 
 		public ObservableCollection<EmailObservable> Emails { get; }
 		public EmailObservable SelectedEmail { get; set; }
@@ -20,7 +20,6 @@ namespace EmailSaver.Client.ViewModels
 		public EmailListViewModel()
 		{
 			//_emailSupplier = new EmailSupplierHttp();
-			_emailSupplier = new EmailSupplierMock();
 			OpenEmailClicked += emailId => { };
 
 			var emails = _emailSupplier.GetAllAsync().Result.Select(e => new EmailObservable(e));

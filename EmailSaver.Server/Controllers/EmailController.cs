@@ -135,7 +135,8 @@ namespace EmailSaver.Server.Controllers
 		{
 			try
 			{
-				return Ok(await _emailSupplier.UpdateAsync(email));
+				await _emailSupplier.UpdateAsync(email);
+				return Ok();
 			}
 			catch (Exception exception)
 			{
@@ -149,7 +150,8 @@ namespace EmailSaver.Server.Controllers
 		{
 			try
 			{
-				return Ok(await _emailSupplier.DeleteAsync(id));
+				await _emailSupplier.DeleteAsync(id);
+				return Ok();
 			}
 			catch (Exception exception)
 			{

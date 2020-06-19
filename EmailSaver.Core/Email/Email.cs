@@ -8,7 +8,7 @@ namespace EmailSaver.Core
 	public class Email
 	{
 		[JsonProperty("id")] public Guid Id { get;}
-		[JsonProperty("date")] public DateTime Date { get;}
+		[JsonProperty("date")] public DateTime Date { get; }
 		[JsonProperty("sender")] public String Sender { get;}
 		[JsonProperty("recipient")] public String Recipient { get;}
 		[JsonProperty("subject")] public String Subject { get; }

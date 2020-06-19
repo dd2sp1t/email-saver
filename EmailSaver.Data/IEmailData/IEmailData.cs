@@ -17,7 +17,7 @@ namespace EmailSaver.Data
 		Task<List<Email>> GetForPeriodAsync(DateTime start, DateTime end);
 
 		Task<Guid> AddAsync(Email email, List<String> tags);
-		Task<Boolean> UpdateAsync(Email email, List<String> tags);
-		Task<Boolean> DeleteAsync(Guid id);
+		Task UpdateAsync(Email email, List<String> tags);
+		Task DeleteAsync(Guid id);
 	}
 }

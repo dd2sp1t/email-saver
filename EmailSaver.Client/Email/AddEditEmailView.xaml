@@ -1,15 +1,89 @@
 ﻿<UserControl x:Class="EmailSaver.Client.Views.AddEditEmailView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:EmailSaver.Client.ViewModels"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}},
                 Path=DataContext.(vm:MainWindowViewModel.AddEditEmailViewModel)}">
-    
+
     <Grid>
-        <TextBlock Text="{Binding EmailId}" />
+
+        <StackPanel Name="EmailAttributes" Orientation="Vertical" Margin="5">
+
+            <Separator Margin="5" />
+
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" Content="ID" />
+                <TextBox Grid.Column="1" Text="{Binding Id, Mode=OneWay}" Padding="5" IsReadOnly="True" />
+            </Grid>
+
+            <Separator Margin="5" />
+
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" Content="Sender" />
+                <TextBox Grid.Column="1" Text="{Binding Sender}" Padding="5" />
+            </Grid>
+
+            <Separator Margin="5" />
+
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" Content="Recipient" />
+                <TextBox Grid.Column="1" Text="{Binding Recipient}" Padding="5" />
+            </Grid>
+
+            <Separator Margin="5" />
+
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" Content="Subject" />
+                <TextBox Grid.Column="1" Text="{Binding Subject}" Padding="5" />
+            </Grid>
+
+            <Separator Margin="5" />
+
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" Content="Text" />
+                <TextBox Grid.Column="1" Text="{Binding Text}" Padding="5" />
+            </Grid>
+
+            <Separator Margin="5" />
+
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="1" Padding="5" Content="Submit" Command="{Binding SubmitCommand}" />
+            </Grid>
+
+        </StackPanel>
     </Grid>
 </UserControl>

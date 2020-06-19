@@ -119,12 +119,12 @@ namespace EmailSaver.Data
 			}
 		}
 
-		public async Task<Boolean> ExecuteAsync(SqlCommand command)
+		public async Task ExecuteAsync(SqlCommand command)
 		{
 			try
 			{
 				if (command.Connection.State != ConnectionState.Open) await command.Connection.OpenAsync();
-				return await command.ExecuteNonQueryAsync() > 0;
+				await command.ExecuteNonQueryAsync();
 			}
 			catch (Exception ex)
 			{
