@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using EmailSaver.Core;
+using Newtonsoft.Json;
 
 namespace EmailSaver.Server.Controllers
 {
@@ -135,6 +137,8 @@ namespace EmailSaver.Server.Controllers
 		{
 			try
 			{
+				_logger.LogInformation($"{DateTime.UtcNow}: HttpPost : AddEmail : Try update {email}");
+
 				await _emailSupplier.UpdateAsync(email);
 				return Ok();
 			}

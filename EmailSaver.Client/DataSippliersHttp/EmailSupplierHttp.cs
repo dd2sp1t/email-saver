@@ -46,7 +46,7 @@ namespace EmailSaver.Client
 
 		public Task UpdateAsync(Email email)
 		{
-			throw new NotImplementedException();
+			return HttpHelper.PutAsync(email, "/api/emails");
 		}
 
 		public Task DeleteAsync(Guid id)

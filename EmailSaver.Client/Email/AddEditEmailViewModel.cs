@@ -54,7 +54,7 @@ namespace EmailSaver.Client.ViewModels
 			Text = email.Text;
 
 			foreach (String tag in email.Tags) _builder.Append(tag + " ");
-
+			
 			Tags = _builder.ToString();
 
 			_builder.Clear();
@@ -73,7 +73,9 @@ namespace EmailSaver.Client.ViewModels
 
 		private async void Submit(Object obj)
 		{
-			var email = new Email(Id, Date, Sender, Recipient, Subject, Text,
+			// todo: remove date stub
+
+			var email = new Email(Id, DateTime.UtcNow, Sender, Recipient, Subject, Text,
 				Tags.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList());
 
 			if (Id == Guid.Empty)

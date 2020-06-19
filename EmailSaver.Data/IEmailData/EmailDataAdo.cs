@@ -79,24 +79,20 @@ namespace EmailSaver.Data
 		public async Task<Guid> AddAsync(Email email, List<String> tags)
 		{
 			await using var connection = new SqlConnection(AdoHelper.ConnectionString);
-
 			await connection.OpenAsync();
-
 			await using SqlTransaction transaction = connection.BeginTransaction();
 
 			try
 			{
-				var dtos = await GetValidTags(tags, transaction);
+				var tagIds = await GetTagIds(tags, transaction);
 
-				String serialized = JsonConvert.SerializeObject(dtos.Select(t => t.Name).ToList());
+				Guid emailId = await AddEmail(email, transaction);
 
-				Guid id = await AddEmail(email, serialized, transaction);
-
-				await AddEmailTags(id, dtos, transaction);
+				await AddEmailTags(emailId, tagIds, transaction);
 
 				await transaction.CommitAsync();
 
-				return id;
+				return emailId;
 			}
 			catch (Exception ex)
 			{
@@ -105,9 +101,27 @@ namespace EmailSaver.Data
 			}
 		}
 
-		public Task UpdateAsync(Email email, List<String> tags)
+		public async Task UpdateAsync(Email email, List<String> tags)
 		{
-			throw new NotImplementedException();
+			await using var connection = new SqlConnection(AdoHelper.ConnectionString);
+			await connection.OpenAsync();
+			await using SqlTransaction transaction = connection.BeginTransaction();
+
+			try
+			{
+				Email old = await GetAsync(email.Id);
+
+				await ProcessTags(email.Id, tags, JsonConvert.DeserializeObject<List<String>>(old.Tags), transaction);
+
+				await UpdateEmailData(email, transaction);
+
+				transaction.Commit();
+			}
+			catch (Exception ex)
+			{
+				transaction.Rollback();
+				throw new Exception("Errors was occured. Transaction declined.", ex);
+			}
 		}
 
 		public async Task DeleteAsync(Guid id)
@@ -120,20 +134,14 @@ namespace EmailSaver.Data
 		}
 
 		/// <summary>
-		/// Returns a valid set of tags for a specific email as a part of insert/update transaction.
+		/// Returns tag GUIDs for a specific email as a part of insert/update transaction.
 		/// </summary>
-		/// <param name="tags">Tag names collection.</param>
+		/// <param name="tags">Email tag names collection.</param>
 		/// <param name="transaction">Transaction to attach possible insert action.</param>
-		private static async Task<List<Tag>> GetValidTags(IEnumerable<String> tags, SqlTransaction transaction)
+		private static async Task<Guid[]> GetTagIds(IReadOnlyCollection<String> tags, SqlTransaction transaction)
 		{
-			if (tags == null) return new List<Tag>();
-
-			var temps = tags.Select(name => new
-				{Name = name, Task = GetTagId(name, transaction)}).ToList();
-
-			await Task.WhenAll(temps.Select(_ => _.Task));
-
-			return temps.Select(_ => new Tag(_.Task.Result, _.Name)).ToList();
+			if (tags == null || tags.Count == 0) return new Guid[0];
+			return await Task.WhenAll(tags.Select(t => GetTagId(t, transaction)));
 		}
 
 		/// <summary>
@@ -155,9 +163,8 @@ namespace EmailSaver.Data
 		/// Adds email entity to database as a part of transaction and returns its GUID.
 		/// </summary>
 		/// <param name="email">Email data transfer object.</param>
-		/// <param name="tags">Serialized string list of valid tag names.</param>
 		/// <param name="transaction">Transaction to attach insert action.</param>
-		private static async Task<Guid> AddEmail(Email email, String tags, SqlTransaction transaction)
+		private static async Task<Guid> AddEmail(Email email, SqlTransaction transaction)
 		{
 			var procedure = "sp_add_email";
 			var @params = new SqlParameter[]
@@ -167,7 +174,7 @@ namespace EmailSaver.Data
 				new SqlParameter("@recipient", email.Recipient.ToLower()),
 				new SqlParameter("@subject", email.Subject),
 				new SqlParameter("@text", email.Text),
-				new SqlParameter("@tags", tags)
+				new SqlParameter("@tags", email.Tags)
 			};
 
 			await using SqlCommand command = AdoHelper.CreateProcedureCommand(procedure, transaction, @params);
@@ -176,11 +183,44 @@ namespace EmailSaver.Data
 		}
 
 		/// <summary>
+		/// Updates email data in database as a part of transaction.
+		/// </summary>
+		/// <param name="email">Email data transfer object.</param>
+		/// <param name="transaction">Transaction to attach update action.</param>
+		private static async Task UpdateEmailData(Email email, SqlTransaction transaction)
+		{
+			var procedure = "sp_update_email";
+			var @params = new SqlParameter[]
+			{
+				new SqlParameter("@id", email.Id),
+				new SqlParameter("@registration_date", email.Date.ToString("yyyy-MM-dd HH:mm:ss")),
+				new SqlParameter("@sender", email.Sender.ToLower()),
+				new SqlParameter("@recipient", email.Recipient.ToLower()),
+				new SqlParameter("@subject", email.Subject),
+				new SqlParameter("@text", email.Text),
+				new SqlParameter("@tags", email.Tags)
+			};
+
+			await using SqlCommand command = AdoHelper.CreateProcedureCommand(procedure, transaction, @params);
+
+			await AdoHelper.ExecuteAsync(command);
+		}
+
+		/// <summary>
 		/// Adds email-tag relation for each email tag as a part of transaction.
 		/// </summary>
-		private static Task AddEmailTags(Guid emailId, IEnumerable<Tag> tags, SqlTransaction transaction)
+		private static Task AddEmailTags(Guid emailId, IEnumerable<Guid> tagIds, SqlTransaction transaction)
 		{
-			return Task.WhenAll(tags.Select(t => AddEmailTag(emailId, t.Id, transaction)));
+			return Task.WhenAll(tagIds.Select(id => AddEmailTag(emailId, id, transaction)));
+		}
+
+		/// <summary>
+		/// Deletes email-tag relation for each email tag as a part of transaction.
+		/// Deletes tag entity if there is no more email-tag relations for a specific tag id.
+		/// </summary>
+		private static Task DeleteEmailTags(Guid emailId, IEnumerable<Guid> tagIds, SqlTransaction transaction)
+		{
+			return Task.WhenAll(tagIds.Select(id => DeleteEmailTag(emailId, id, transaction)));
 		}
 
 		private static async Task<Guid> AddEmailTag(Guid emailId, Guid tagId, SqlTransaction transaction)
@@ -192,6 +232,44 @@ namespace EmailSaver.Data
 			await using SqlCommand command = AdoHelper.CreateProcedureCommand(procedure, transaction, @params);
 
 			return await AdoHelper.AddItemAsync(command);
+		}
+
+		private static async Task DeleteEmailTag(Guid emailId, Guid tagId, SqlTransaction transaction)
+		{
+			var procedure = "sp_delete_email_tag";
+			var @params = new SqlParameter[]
+				{new SqlParameter("@email_id", emailId), new SqlParameter("@tag_id", tagId)};
+
+			await using SqlCommand command = AdoHelper.CreateProcedureCommand(procedure, transaction, @params);
+
+			await AdoHelper.ExecuteAsync(command);
+		}
+
+		private static async Task ProcessTags(Guid emailId, IReadOnlyCollection<String> newTags,
+			IReadOnlyCollection<String> oldTags, SqlTransaction transaction)
+		{
+			var oldTagSet = new HashSet<String>();
+			var newTagSet = new HashSet<String>();
+
+			foreach (String tag in oldTags) oldTagSet.Add(tag);
+			foreach (String tag in newTags) newTagSet.Add(tag);
+
+			var tagsToAdd = new List<String>(newTags.Where(t => !oldTagSet.Contains(t)));
+			var tagsToDelete = new List<String>(oldTags.Where(t => !newTagSet.Contains(t)));
+
+			var tagsToAddIds = await GetTagIds(tagsToAdd, transaction);
+			var tagsToDeleteIds = await GetTagIds(tagsToDelete, transaction);
+
+			await AddEmailTags(emailId, tagsToAddIds, transaction);
+			await DeleteEmailTags(emailId, tagsToDeleteIds, transaction);
+		}
+
+		private async Task<Email> GetAsync(Guid id, SqlTransaction transaction)
+		{
+			var @params = new SqlParameter[] { new SqlParameter("@id", id) };
+			await using SqlCommand command = AdoHelper.CreateProcedureCommand("sp_get_email", transaction, @params);
+
+			return await AdoHelper.GetItemAsync(command, _mapper);
 		}
 	}
 }

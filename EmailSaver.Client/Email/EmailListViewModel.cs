@@ -20,9 +20,7 @@ namespace EmailSaver.Client.ViewModels
 		{
 			_emailSupplier = emailSupplier;
 
-			var emails = _emailSupplier.GetAllAsync().Result.Select(e => new EmailObservable(e));
-
-			Emails = new ObservableCollection<EmailObservable>(emails);
+			Emails = new ObservableCollection<EmailObservable>();
 
 			OpenEmailCommand = new RelayCommand(OpenEmail);
 		}

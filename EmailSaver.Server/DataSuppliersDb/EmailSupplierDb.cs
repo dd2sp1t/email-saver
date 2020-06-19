@@ -50,16 +50,20 @@ namespace EmailSaver.Server
 
 		public Task<Guid> AddAsync(Core.Email email)
 		{
+			String serialized = JsonConvert.SerializeObject(email.Tags);
+
 			var dto = new Data.Email(Guid.Empty, email.Date, email.Sender.ToLower(), email.Recipient.ToLower(),
-				email.Subject, email.Text, null);
+				email.Subject, email.Text, serialized);
 
 			return _emailData.AddAsync(dto, email.Tags);
 		}
 
 		public Task UpdateAsync(Core.Email email)
 		{
+			String serialized = JsonConvert.SerializeObject(email.Tags);
+
 			var dto = new Data.Email(email.Id, email.Date, email.Sender.ToLower(), email.Recipient.ToLower(),
-				email.Subject, email.Text, null);
+				email.Subject, email.Text, serialized);
 
 			return _emailData.UpdateAsync(dto, email.Tags);
 		}

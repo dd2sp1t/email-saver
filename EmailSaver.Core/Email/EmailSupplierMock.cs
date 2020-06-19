@@ -86,6 +86,8 @@ namespace EmailSaver.Core
 			_emails.Remove(old);
 			_emails.Add(email);
 
+			// todo: update tag mock set
+
 			return Task.CompletedTask;
 		}
 

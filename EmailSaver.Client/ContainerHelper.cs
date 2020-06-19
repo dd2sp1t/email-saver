@@ -10,7 +10,7 @@ namespace EmailSaver.Client
 
 		static ContainerHelper()
 		{
-			Container.RegisterType<IEmailSupplier, EmailSupplierMock>(new ContainerControlledLifetimeManager());
+			Container.RegisterType<IEmailSupplier, EmailSupplierHttp>(new ContainerControlledLifetimeManager());
 		}
 	}
 }
