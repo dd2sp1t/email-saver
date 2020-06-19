@@ -34,7 +34,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Grid.Column="0" Content="Sender" />
-                <TextBox Grid.Column="1" Text="{Binding Sender}" Padding="5" />
+                <TextBox Grid.Column="1" Text="{Binding Sender, ValidatesOnNotifyDataErrors=True}" Padding="5" />
             </Grid>
 
             <Separator Margin="5" />
@@ -46,7 +46,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Grid.Column="0" Content="Recipient" />
-                <TextBox Grid.Column="1" Text="{Binding Recipient}" Padding="5" />
+                <TextBox Grid.Column="1" Text="{Binding Recipient, ValidatesOnNotifyDataErrors=True}" Padding="5" />
             </Grid>
 
             <Separator Margin="5" />
@@ -58,7 +58,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Grid.Column="0" Content="Subject" />
-                <TextBox Grid.Column="1" Text="{Binding Subject}" Padding="5" />
+                <TextBox Grid.Column="1" Text="{Binding Subject, ValidatesOnNotifyDataErrors=True}" Padding="5" />
             </Grid>
 
             <Separator Margin="5" />
@@ -70,7 +70,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Grid.Column="0" Content="Text" />
-                <TextBox Grid.Column="1" Text="{Binding Text}" Padding="5" />
+                <TextBox Grid.Column="1" Text="{Binding Text, ValidatesOnNotifyDataErrors=True}" Padding="5" />
             </Grid>
 
             <Separator Margin="5" />
@@ -81,7 +81,11 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="1" Padding="5" Content="Submit" Command="{Binding SubmitCommand}" />
+                <Button Grid.Column="1"
+                        Padding="5"
+                        Content="Submit"
+                        IsEnabled="{Binding IsSubmitEnabled}"
+                        Command="{Binding SubmitCommand}" />
             </Grid>
 
         </StackPanel>

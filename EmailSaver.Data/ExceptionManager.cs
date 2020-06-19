@@ -28,21 +28,8 @@ namespace EmailSaver.Data
 
 		#endregion
 
-		private readonly Action<String> _publisher;
-
-		private ExceptionManager()
+		public String BuildMessage(Exception exception, SqlCommand command)
 		{
-			_publisher = Console.WriteLine;
-		}
-
-		public void Publish(Exception exception, SqlCommand command = null)
-		{
-			if (command == null)
-			{
-				_publisher(exception.Message + "\n" + exception.StackTrace);
-				return;
-			}
-
 			var builder = new StringBuilder(1024);
 
 			builder.AppendLine(exception.Message + "\n");
@@ -61,9 +48,8 @@ namespace EmailSaver.Data
 
 			builder.AppendLine($"Database: {command.Connection.Database}");
 			builder.AppendLine($"Connection string: {command.Connection.ConnectionString}");
-			builder.AppendLine($"\nStack trace:\n{exception.StackTrace}");
 
-			_publisher(builder.ToString());
+			return builder.ToString();
 		}
 	}
 }

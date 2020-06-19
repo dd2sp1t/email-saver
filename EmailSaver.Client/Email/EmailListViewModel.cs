@@ -29,7 +29,7 @@ namespace EmailSaver.Client.ViewModels
 			OpenEmailCommand = new RelayCommand(OpenEmail);
 		}
 
-		public async void GetAllEmailsClickedHandler()
+		public async void GetAllEmails()
 		{
 			var emails = await _emailSupplier.GetAllAsync();
 

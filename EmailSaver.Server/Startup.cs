@@ -22,7 +22,7 @@ namespace EmailSaver.Server
 			services.AddControllers().AddNewtonsoftJson();
 
 			services.AddSingleton<IEmailSupplier, EmailSupplierDb>();
-			services.AddSingleton<ITagSupplier, TagSupplierMock>();
+			services.AddSingleton<ITagSupplier, TagSupplierDb>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

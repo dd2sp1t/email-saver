@@ -11,8 +11,6 @@ namespace EmailSaver.Client.ViewModels
 
 		public RelayCommand NavigationCommand { get; }
 
-		private event Action GetAllEmailsClicked;
-
 		public MainWindowViewModel()
 		{
 			EmailListViewModel = new EmailListViewModel();
@@ -20,14 +18,19 @@ namespace EmailSaver.Client.ViewModels
 
 			NavigationCommand = new RelayCommand(Navigate);
 
-			GetAllEmailsClicked += EmailListViewModel.GetAllEmailsClickedHandler;
 			EmailListViewModel.OpenEmailClicked += OnOpenEmailClicked;
+			AddEditEmailViewModel.EmailSubmited += OnEmailSubmited;
 		}
 
 		private async void OnOpenEmailClicked(Guid id)
 		{
 			await AddEditEmailViewModel.FillEmailData(id);
 			CurrentViewModel = AddEditEmailViewModel;
+		}
+
+		private void OnEmailSubmited()
+		{
+			Navigate("emails");
 		}
 
 		private async void Navigate(Object parameter)
@@ -37,10 +40,7 @@ namespace EmailSaver.Client.ViewModels
 			switch (target)
 			{
 				case "emails":
-				{
-					GetAllEmailsClicked?.Invoke();
 					CurrentViewModel = EmailListViewModel;
-				}
 					break;
 				case "add-edit":
 				{

@@ -60,8 +60,8 @@ namespace EmailSaver.Data
 			}
 			catch (Exception ex)
 			{
-				ExceptionManager.Instance.Publish(ex, command);
-				throw;
+				String message = ExceptionManager.Instance.BuildMessage(ex, command);
+				throw new Exception(message, ex);
 			}
 		}
 
@@ -78,8 +78,8 @@ namespace EmailSaver.Data
 			}
 			catch (Exception ex)
 			{
-				ExceptionManager.Instance.Publish(ex, command);
-				throw;
+				String message = ExceptionManager.Instance.BuildMessage(ex, command);
+				throw new Exception(message, ex);
 			}
 		}
 
@@ -98,8 +98,8 @@ namespace EmailSaver.Data
 			}
 			catch (Exception ex)
 			{
-				ExceptionManager.Instance.Publish(ex, command);
-				throw;
+				String message = ExceptionManager.Instance.BuildMessage(ex, command);
+				throw new Exception(message, ex);
 			}
 		}
 
@@ -114,8 +114,8 @@ namespace EmailSaver.Data
 			}
 			catch (Exception ex)
 			{
-				ExceptionManager.Instance.Publish(ex, command);
-				throw;
+				String message = ExceptionManager.Instance.BuildMessage(ex, command);
+				throw new Exception(message, ex);
 			}
 		}
 
@@ -128,8 +128,8 @@ namespace EmailSaver.Data
 			}
 			catch (Exception ex)
 			{
-				ExceptionManager.Instance.Publish(ex, command);
-				throw;
+				String message = ExceptionManager.Instance.BuildMessage(ex, command);
+				throw new Exception(message, ex);
 			}
 		}
 

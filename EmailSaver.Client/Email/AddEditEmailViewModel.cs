@@ -2,28 +2,40 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using EmailSaver.Core;
+using Validar;
 
 namespace EmailSaver.Client.ViewModels
 {
+	[InjectValidation]
 	internal class AddEditEmailViewModel : BindableBase
 	{
 		private readonly IEmailSupplier _emailSupplier = EmailSupplierMock.Instance;
+		private readonly ValidationTemplate _validation;
 
 		public Guid Id { get; private set; }
-		public DateTime Date { get; set; }
-		public String Sender { get; set; }
-		public String Recipient { get; set; }
-		public String Subject { get; set; }
-		public String Text { get; set; }
+		[Required] public DateTime Date { get; set; }
+		[Required] public String Sender { get; set; }
+		[Required] public String Recipient { get; set; }
+		[Required] public String Subject { get; set; }
+		[Required] public String Text { get; set; }
 		public ObservableCollection<String> Tags { get; }
 
 		public RelayCommand SubmitCommand { get; }
+		public Boolean IsSubmitEnabled { get; private set; }
+
+		public event Action EmailSubmited; 
 
 		public AddEditEmailViewModel()
 		{
 			Tags = new ObservableCollection<String>();
 			SubmitCommand = new RelayCommand(Submit);
+
+			_validation = new ValidationTemplate(this);
+
+			_validation.ErrorsChanged += (sender, args) => IsSubmitEnabled = !_validation.HasErrors;
 		}
 
 		public async Task FillEmailData(Guid id)
@@ -48,10 +60,10 @@ namespace EmailSaver.Client.ViewModels
 		{
 			Id = default;
 			Date = default;
-			Sender = "";
-			Recipient = "";
-			Subject = "";
-			Text = "";
+			Sender = default;
+			Recipient = default;
+			Subject = default;
+			Text = default;
 			Tags.Clear();
 		}
 
@@ -62,10 +74,13 @@ namespace EmailSaver.Client.ViewModels
 			if (Id == Guid.Empty)
 			{
 				Id = await _emailSupplier.AddAsync(email);
-				return;
+			}
+			else
+			{
+				await _emailSupplier.UpdateAsync(email);
 			}
 
-			await _emailSupplier.UpdateAsync(email);
+			EmailSubmited?.Invoke();
 		}
 	}
 }

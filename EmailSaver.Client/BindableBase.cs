@@ -1,9 +1,9 @@
-﻿using PropertyChanged;
+﻿using System.ComponentModel;
 
 namespace EmailSaver.Client
 {
-	[AddINotifyPropertyChangedInterface]
-	internal class BindableBase
+	internal class BindableBase : INotifyPropertyChanged
 	{
+		public event PropertyChangedEventHandler PropertyChanged;
 	}
 }
