@@ -137,7 +137,7 @@ namespace EmailSaver.Server.Controllers
 		{
 			try
 			{
-				_logger.LogInformation($"{DateTime.UtcNow}: HttpPost : AddEmail : Try update {email}");
+				_logger.LogInformation($"{DateTime.UtcNow}: HttpPut : UpdateEmail : Try update {email}");
 
 				await _emailSupplier.UpdateAsync(email);
 				return Ok();
