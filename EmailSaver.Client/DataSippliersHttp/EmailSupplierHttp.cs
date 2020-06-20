@@ -21,7 +21,12 @@ namespace EmailSaver.Client
 		{
 			return HttpHelper.PostAsync(email, "/api/emails");
 		}
-
+		
+		public Task UpdateAsync(Email email)
+		{
+			return HttpHelper.PutAsync(email, "/api/emails");
+		}
+		
 		#region NotImplemented
 
 		public Task<List<Email>> GetByTagAsync(String tag)
@@ -42,11 +47,6 @@ namespace EmailSaver.Client
 		public Task<List<Email>> GetForPeriodAsync(DateTime start, DateTime end)
 		{
 			throw new NotImplementedException();
-		}
-
-		public Task UpdateAsync(Email email)
-		{
-			return HttpHelper.PutAsync(email, "/api/emails");
 		}
 
 		public Task DeleteAsync(Guid id)
