@@ -43,9 +43,9 @@ namespace EmailSaver.Server
 			return (await _emailData.GetByRecipientAsync(recipient)).Select(ConvertToCoreEmail).ToList();
 		}
 
-		public async Task<List<Core.Email>> GetForPeriodAsync(DateTime start_date, DateTime end_date)
+		public async Task<List<Core.Email>> GetForPeriodAsync(DateTime start, DateTime end)
 		{
-			return (await _emailData.GetForPeriodAsync(start_date, end_date)).Select(ConvertToCoreEmail).ToList();
+			return (await _emailData.GetForPeriodAsync(start, end)).Select(ConvertToCoreEmail).ToList();
 		}
 
 		public Task<Guid> AddAsync(Core.Email email)
