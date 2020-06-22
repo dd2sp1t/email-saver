@@ -97,7 +97,7 @@ namespace EmailSaver.Data
 			catch (Exception ex)
 			{
 				transaction.Rollback();
-				throw new Exception("Errors was occured. Transaction declined.", ex);
+				throw new Exception("Error was occured. Transaction declined.", ex);
 			}
 		}
 
@@ -120,7 +120,7 @@ namespace EmailSaver.Data
 			catch (Exception ex)
 			{
 				transaction.Rollback();
-				throw new Exception("Errors was occured. Transaction declined.", ex);
+				throw new Exception("Error was occured. Transaction declined.", ex);
 			}
 		}
 
